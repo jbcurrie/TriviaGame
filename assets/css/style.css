@@ -1,0 +1,20 @@
+/*set the container height and width, or let the elements set it resonsively with bootstrap*/
+
+h2 {
+	color: #ffffff;
+}
+
+.answerBtn {
+	font-size: 2em;
+	font-weight: bold;
+}
+
+.question {
+	color: #000000;
+	font-weight: bolder:;
+}
+
+.timer {
+	/*change color depending on time left*/
+	font-weight: bold;
+}
