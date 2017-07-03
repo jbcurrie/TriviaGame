@@ -12,18 +12,23 @@
 		//gif to display
 var gameArr = [];
 var correctAnsCnt = 0;
+var correctAnswer = "";
 var incorrectAnsCnt = 0;
+var unAnsCnt = 0;
+var answer = "";
 // var correct = true;
 // var incorrect = true;
 
 // Variable showQuestion will hold the setInterval when we start each round of the game
-var showQuestion;
+var showAnswer;
 // counter for correct answer page
-var answerPgCount = 0;
+// var answerPgCount = 0;
 // counter for next questions
 var questionCount = 0;
 
 var number = 20;
+//clear timer for the question rounds
+var questionsRunning = false;
 
 var gameObj = {
 shuffleQuestions : function (array) {
@@ -466,8 +471,14 @@ shuffleQuestions : function (array) {
 				]};
 
 
-var gifObj = {goodAnswer : ['https://media.giphy.com/media/FJkjFPkjn81vG/giphy.gif', 'https://media.giphy.com/media/qrlOmXoTgHAd2/giphy.gif', 'https://media.giphy.com/media/w5FTwwiweGqDm/giphy.gif', 'https://media.giphy.com/media/BLTS8Dz5exZiU/giphy.gif'], 
-				badAnswer : ['https://media.giphy.com/media/z1GQ9t8FxipnG/giphy.gif', 'https://media.giphy.com/media/3o6Mb43PiNTQS5WgLu/giphy.gif', 'https://media.giphy.com/media/3oKIP8quIMUnLdfTAQ/giphy.gif', 'https://media.giphy.com/media/iCyNFaz5QoIb6/giphy.gif']}
+var gifObj = {goodAnswer : ['https://media.giphy.com/media/FJkjFPkjn81vG/giphy.gif', 
+							'https://media.giphy.com/media/qrlOmXoTgHAd2/giphy.gif', 
+							'https://media.giphy.com/media/w5FTwwiweGqDm/giphy.gif', 
+							'https://media.giphy.com/media/BLTS8Dz5exZiU/giphy.gif'], 
+			badAnswer : ['https://media.giphy.com/media/z1GQ9t8FxipnG/giphy.gif', 
+							'https://media.giphy.com/media/3o6Mb43PiNTQS5WgLu/giphy.gif', 
+							'https://media.giphy.com/media/3oKIP8quIMUnLdfTAQ/giphy.gif', 
+							'https://media.giphy.com/media/iCyNFaz5QoIb6/giphy.gif']}
 
 // shows gif image
 // $("h1").after(gifObj.spaceTaco);
@@ -486,9 +497,9 @@ function start() {
 	pickTwenty(gameArr);
 	console.log(gameArr);
 	questionRounds ();
-	if ($("button").hasClass("answerBtn")) {
-		$(".gameDiv").on("click","button",stopQuestion);
-	};
+	// if ($("button").hasClass("answerBtn")) {
+	// 	$(".gameDiv").on("click","button",stopQuestion);
+	// };
 	// displayQuestion();
 };
 
@@ -506,12 +517,8 @@ function questionRounds () {
 	$(".gameDiv").on("click",".startGame", function (event) {
 		$(".startGame").remove();
 
-		// showQuestion = setImmediate(displayQuestion, 1000 * 20);
 		displayQuestion();
-		number = 20;
-		gameRun();
 		//logic from stopwatch. use to turn clock on and off
-		questionsRunning = true;
 
 		//question function
 		//start timer, trigger is button click, counts down from 30 (lasts per question)
@@ -521,18 +528,22 @@ function questionRounds () {
 };
 
 function gameRun () {
-	timeRemaining = setInterval(decrement, 1000);
-	$(".question").before($("<h3 class='timer'>Time Left : " + number + "s</h3>"));
-	//decrement
-
+	//boolean to ensure that timeRemaining does not speed up
+	if (!questionsRunning) {
+		timeRemaining = setInterval(decrement, 1000);
+		//displays timer
+		$(".question").before($("<h3 class='timer'>Time Left : " + number + "s</h3>"));
+		questionsRunning = true;
+		//decrement
+	}
 };
 
 function decrement () {
-	debugger;
+	// debugger;
 
 	number--;
 
-    //  Show the number in the #show-number tag.
+    //  Show the number in the #timer tag.
     $(".timer").html($("<h3>Time Left : " + number + "s</h3>"));
 
 
@@ -546,16 +557,22 @@ function decrement () {
 
 
 function stop () {
-   	if (number === 0) {
+   	// if (number === 0) {
     clearInterval(timeRemaining);
-	}
+    questionsRunning = false;
+
+	// }
 };
 
 //displays question for each round
 function displayQuestion () {
 	// console.log(gameArr);
-	debugger;
-	 // $("#image-holder").html("<img src=" + images[questionCount] + " width='400px'>");
+	// debugger;
+	//stop the timeout for the answer page. 
+	clearTimeout(nextQuestion);
+	//remove correct answer div
+	$(".answer").remove();
+	 // add a div for answer buttons
 	 var answerDiv = "<div class='row'>" + 
 	 					"<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>" + 
 	 					"<button type='button' class='btn btn-default btn-block answerBtn'>" +  
@@ -565,15 +582,15 @@ function displayQuestion () {
 
 	 
 	 
-	//image to display
+	//question to display
 	if (gameArr[questionCount].type === 'boolean') {
 		var tempArr = [];
 		$(".question").html(gameArr[questionCount].question);
-		//put T/F in alphabetical order and put F in the first button div, T in the second
+
 		tempArr.push(gameArr[questionCount].correct_answer);
 		for (var i = 0; i < gameArr[questionCount].incorrect_answers.length; i++) {
 			tempArr.push(gameArr[questionCount].incorrect_answers[i]);
-		};
+		}; 		//t/f will always appear in the same order 
 			for (var j = 0; j < tempArr.length; j++) {
 				if (tempArr[0] < tempArr[1]) {
 					temp=tempArr[1];
@@ -592,7 +609,7 @@ function displayQuestion () {
 		for (var i = 0; i < gameArr[questionCount].incorrect_answers.length; i++) {
 			tempArrE.push(gameArr[questionCount].incorrect_answers[i]);
 		};
-
+		//multi choice responses will be shuffled for each round
 			var j = tempArrE.length;
 			var k = 0;
 			var temp = [];
@@ -615,92 +632,111 @@ function displayQuestion () {
 			
 		}
 
+
 	};
-	// {"category": "Science & Nature",
-	// "type": "multiple",
-	// "difficulty": "medium",
-	// "question": "What is the unit of electrical capacitance?",
-	// "correct_answer": "Farad",
-	// "incorrect_answers": [
-	// "Gauss",
-	// "Henry",
-	// "Watt"]}
+	//setTimeout time for question timer
+	number = 20;
+	//timer function for each question
+	gameRun();
+	//on click, show the answer page
+	//what's the status of questionsRunning when buttonClick is called?
+	// debugger;
 
-
-
-	//
-	//if category boolean, do this 
-// true false
-// $(".question").html(objtype.results[0].question);
-// $(".question").after($("<button type='button' class='btn btn-default btn-block'>" + objtype.results[0].correct_answer + "</button>"));
-// $(".question").after($("<button type='button' class='btn btn-default btn-block'>" + objtype.results[0].incorrect_answers[0] + "</button>"));
-
-//if category multichoice, do this
-// multichoice
-
-	//need randon answer order 
-	//Math.floor(Math.random()*(objtype.results[1].incorrect_answers.length +1)) gives a number between 0 and 3
-	//use the result of this calculation to decide the index position of the correct answer
-	//use the result of this calculation to decide the index position of the incorrect ansers 
-
-		//push them all to the same array in random order
-
-	//answerArray.push.objtype.results[1].incorrect_answers[i]
-
-	//or use shuffle function after you push them all to the same array
-// });
+	//setTimeout function for question page (this function determines when nextQuestion function runs)
+	showAnswer = setTimeout(nextQuestion, 1000 * 20);
+	debugger;
+	buttonClick();
 };
 
-//interval page where correct answer displayed. 
+
+//mouse click function to interrupt timer when player selects their answer
+function buttonClick () {
+	$("button.answerBtn").on("click",nextQuestion);
+	// $("button.answerBtn").on("click",clearInterval(timeRemaining));
+}
+
+//clearTimeout for Question round, display correct answer, setTimeout to automatically begin next round
 function nextQuestion() {
 	//not sure how to use this interval
-	answerPgCount++;
+	// answerPgCount++;
+	//cleartimeout if it wasn't cleared at the end of the question round
+	clearTimeout(showAnswer);
+	//stop the clock;
+	stop();
+		// $("button.answerBtn").on("click") ===true || 
+		// if ($(".timer").text() === "Time Left : 0s") {
+			//remove the timer
+			$(".timer").remove();
 
+			//display the correct answer to the DOM
+			correctAnswer = gameArr[questionCount].correct_answer;
+			$(".question").append("<h3 class='correctAnswer'>" + correctAnswer + "</h3>");
 
-	//replace this code with the correct answer and gif
-	$("#image-holder").html("<img src='images/loading.gif' width='200px'/>");
-  // delay showing next question for this long
-  setTimeout(displayQuestion, 1000 * 10);
+			//if (correctAnswer) matches the text of the button you clicked, show correct answer
+			debugger	
+			//i need the correct boolean/test for button clicks 
+			var resultDiv = $("<h3 class='answer'></h3>")
+			//needs to be in position 1. needs to say, if no click (if "this' is the window)
+			if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) === -1 && $(this).text() !== correctAnswer) {
+				debugger;
+				$(".question").before(resultDiv);
+				$(".answer").text("You didn't answer!");
+				unAnsCnt++;
+			} else if ($(this).text() === correctAnswer) {
+				debugger;
+				$(".question").before(resultDiv);
+				$(".answer").text("Correct!");
+				correctAnsCnt ++;
+				//need condition for no button press
+				// $("h1").after(gifObj.spaceTaco);
+				//replace this code with the correct answer and gif
+				//img responsive would be best, but we'r using HTML tags, so check GIPHY for helpful tags
+				// $("#image-holder").html("<img src='images/loading.gif' width='200px'/>");
 
+				//captures all non-clicks because the if statment is too broad
+			} else if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) !== -1) {
+				debugger;
+				$(".question").before(resultDiv);
+				$(".answer").text("Incorrect!");
+				incorrectAnsCnt ++;
+			}
 
-  // TODO: If the count is the same as the length of the image array, reset the count to 0.
-  if (answerPgCount === 10) {
-    answerPgcount = 0;
-   };
-
- 	//clear divs? 
-
+			$("button.answerBtn").parent().parent().remove();
+		// };
+  	questionCount++;
+  	setTimeout(displayQuestion, 1000 * 10);
 
 }
 
-
-function stopQuestion() {
-
-  // TODO: Put our clearInterval here:
-  clearInterval(showQuestion);
-  questionsRunning = false;
-
-};
+$(document).ready(function() {
+	document.querySelector("body").style.backgroundImage="url(assets/images/dna2.jpg)";
+	start();
+}); 
 
 
+  
+  // // TODO: If the count is the same as the length of the question array, reset the count to 0.
+  // if (questionCount === 20) {
+  //   resetgame
+  // questionCount = 0;
+  //  };
 
 
-// on click function
-	//on click, log correct answer/ incorrect answer result and store it to a counter
-	//replace DOM with answer and gif
-		//math random which gif to display
-	//timer 7 seconds, next question function 
+// function stopQuestion() {
+
+//   // TODO: Put our clearInterval here:
+//   clearInterval(showAnswer);
+//   // questionsRunning = false;
+
+// };
+
+
 
 //on game end and reset
 	//replace dom with score 
 		//maybe a unique gif
 	//display play again button (restart function)
 
-$(document).ready(function() {
-	document.querySelector("body").style.backgroundImage="url(assets/images/dna2.jpg)";
-	start();
-	var questionsRunning = false;
-}); 
 
 
 //------------------------ADDITIONAL NOTES---------------------------
