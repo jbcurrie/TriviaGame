@@ -21,6 +21,8 @@ var answer = "";
 
 // Variable showQuestion will hold the setInterval when we start each round of the game
 var showAnswer;
+var showQuestion;
+var showResults;
 // counter for correct answer page
 // var answerPgCount = 0;
 // counter for next questions
@@ -505,7 +507,7 @@ function start() {
 
 //twenty questions per game (on window load/ start function invoked)
 function pickTwenty (arr) {
-	for (var i = 0; i < 20; i++) {
+	for (var i = 0; i < 21; i++) {
 		arr.push(gameObj.questionObj[i])
 	}
 	return arr; 
@@ -655,7 +657,7 @@ function buttonClick () {
 	// $("button.answerBtn").on("click",clearInterval(timeRemaining));
 }
 
-//clearTimeout for Question round, display correct answer, setTimeout to automatically begin next round
+//display correct answer, clearTimeout for Question round, , setTimeout to automatically begin next round
 function nextQuestion() {
 	//not sure how to use this interval
 	// answerPgCount++;
@@ -704,8 +706,37 @@ function nextQuestion() {
 			$("button.answerBtn").parent().parent().remove();
 		// };
   	questionCount++;
-  	setTimeout(displayQuestion, 1000 * 10);
+  	showQuestion = setTimeout(displayQuestion, 1000 * 10);
 
+  	if (questionCount > 19) {
+  		showResults = setTimeout(gameResults, 1000 * 10);
+  	}
+};
+
+function gameResults () {
+	//stop interval true
+	clearTimeout(showQuestion);
+	stop();
+	//empty page ans show results
+		$(".answer").remove(); 
+		$(".timer").remove();
+		$("button.answerBtn").parent().parent().remove();
+		$(".question").empty().replaceWith("<h2 class='results'>Game Over!</h2>")
+		$(".correctAnswer").remove();
+		
+		var resultsDiv = "<div class='row resetBtn'>" + 
+	 					"<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>" +  
+	 					"</div>" + 
+	 					"</div>";
+	 	debugger;
+		$(".results").after("<h3>Correct Answers: " + correctAnsCnt + "</h3>").addClass("results")
+		$(".results").after("<h3>Total Incorrect Answers: " + incorrectAnsCnt + "</h3>").addClass("results");
+		$(".results").after("<h3>Total Unanswered: " + unAnsCnt + "</h3").addClass("results");
+		$(".results").after(resultsDiv);
+		$(".resetBtn").append("<button class='btn btn-success btn-lg resetButton'>" + "Play Again" + "</button>");
+
+	//start reset/restart function
+	clearTimeout(gameResults);
 }
 
 $(document).ready(function() {

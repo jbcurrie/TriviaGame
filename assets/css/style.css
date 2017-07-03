@@ -18,3 +18,7 @@ h2 {
 	/*change color depending on time left*/
 	font-weight: bold;
 }
+
+.results {
+	color: #000000;
+}
