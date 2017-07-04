@@ -5,27 +5,15 @@
 // }
 
 
-// science and nature questions
-	//change response_code to gifObj
-	//consider running functions in object if it makes more sense, otherwise you can refer to the object, and store the results in the window
-		//game array
-		//gif to display
 var gameArr = [];
 var correctAnsCnt = 0;
 var correctAnswer = "";
 var incorrectAnsCnt = 0;
 var unAnsCnt = 0;
 var answer = "";
-// var correct = true;
-// var incorrect = true;
-
-// Variable showQuestion will hold the setInterval when we start each round of the game
 var showAnswer;
 var showQuestion;
 var showResults;
-// counter for correct answer page
-// var answerPgCount = 0;
-// counter for next questions
 var questionCount = 0;
 
 var number = 20;
@@ -484,26 +472,16 @@ var gifObj = {goodAnswer : ['https://media.giphy.com/media/FJkjFPkjn81vG/giphy.g
 							'https://media.giphy.com/media/iCyNFaz5QoIb6/giphy.gif']}
 var randomGif;
 // shows gif image
-// $("h1").after(gifObj.spaceTaco);
 
-console.log(gameObj.questionObj);
 
 function start() {
 	// on game start, shuffle object, grab the first 20 to a game array
 		// shuffle function
-		//store to window, or object? 
 	// game objects loaded on this screen (start function that will reset, also triggered when you choose 'play again' ), and "play game" button click starts the question function 
 	cloneStart = $(".gameDiv").clone();
 	gameObj.shuffleQuestions(gameObj.questionObj);
-	console.log(gameObj.questionObj)
-	//pick20
 	pickTwenty(gameArr);
-	console.log(gameArr);
 	questionRounds ();
-	// if ($("button").hasClass("answerBtn")) {
-	// 	$(".gameDiv").on("click","button",stopQuestion);
-	// };
-	// displayQuestion();
 };
 
 //twenty questions per game (on window load/ start function invoked)
@@ -514,18 +492,13 @@ function pickTwenty (arr) {
 	return arr; 
 };
 
-//should start the game intervals (20 seconds) once start is clicked. after 20 seconds, or a button click, nextQuestion interval begins
+//starts the game intervals (20 seconds) once start is clicked. after 20 seconds, or a button click, nextQuestion interval begins
 //next question shows after nextQuestion interval ends 
 function questionRounds () {
 	$(".gameDiv").on("click",".startGame", function (event) {
 		$(".startGame").remove();
 
 		displayQuestion();
-		//logic from stopwatch. use to turn clock on and off
-
-		//question function
-		//start timer, trigger is button click, counts down from 30 (lasts per question)
-		//show question, and answer choices 
 	});
 
 };
@@ -537,12 +510,10 @@ function gameRun () {
 		//displays timer
 		$(".question").before($("<h3 class='timer'>Time Left : " + number + "s</h3>"));
 		questionsRunning = true;
-		//decrement
 	}
 };
 
 function decrement () {
-	// 
 
 	number--;
 
@@ -560,17 +531,14 @@ function decrement () {
 
 
 function stop () {
-   	// if (number === 0) {
     clearInterval(timeRemaining);
     questionsRunning = false;
 
-	// }
 };
 
 //displays question for each round
 function displayQuestion () {
-	// console.log(gameArr);
-	// 
+
 	//stop the timeout for the answer page. 
 	clearTimeout(nextQuestion);
 	//remove correct answer div
@@ -643,7 +611,6 @@ function displayQuestion () {
 	gameRun();
 	//on click, show the answer page
 	//what's the status of questionsRunning when buttonClick is called?
-	// 
 
 	//setTimeout function for question page (this function determines when nextQuestion function runs)
 	showAnswer = setTimeout(nextQuestion, 1000 * 20);
@@ -655,35 +622,29 @@ function displayQuestion () {
 //mouse click function to interrupt timer when player selects their answer
 function buttonClick () {
 	$("button.answerBtn").on("click",nextQuestion);
-	// $("button.answerBtn").on("click",clearInterval(timeRemaining));
 }
 
-//display correct answer, clearTimeout for Question round, , setTimeout to automatically begin next round
+//display correct answer, clearTimeout for Question round, setTimeout to automatically begin next round
 function nextQuestion() {
-	//not sure how to use this interval
-	// answerPgCount++;
 	//cleartimeout if it wasn't cleared at the end of the question round
 	clearTimeout(showAnswer);
 	//stop the clock;
 	stop();
-		// $("button.answerBtn").on("click") ===true || 
-		// if ($(".timer").text() === "Time Left : 0s") {
 			//remove the timer
 			$(".timer").remove();
-
 			//display the correct answer to the DOM
 			correctAnswer = gameArr[questionCount].correct_answer;
 			$(".question").append("<h3 class='correctAnswer'>" + correctAnswer + "</h3>");
-
 			//if (correctAnswer) matches the text of the button you clicked, show correct answer	
-			//i need the correct boolean/test for button clicks 
+
 			var resultDiv = $("<h3 class='answer'></h3>")
-			//needs to be in position 1. needs to say, if no click (if "this' is the window)
+		
 			if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) === -1 && $(this).text() !== correctAnswer) {
 				$(".question").before(resultDiv);
 				$(".answer").text("You didn't answer!");
 				$(".correctAnswer").after($("<img>").attr("src",'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif'));
 				$("img").addClass("img-responsive center-block");
+				$(".correctAnswer, .answer").css('color', '#ff0000');
 				unAnsCnt++;
 			} else if ($(this).text() === correctAnswer) {
 				
@@ -692,14 +653,9 @@ function nextQuestion() {
 				randomGif = Math.floor(Math.random()*(4));
 				$(".correctAnswer").after($("<img>").attr("src",gifObj.goodAnswer[randomGif]));
 				$("img").addClass("img-responsive center-block");
+				$(".correctAnswer, .answer").css('color', '#228B22');
 				correctAnsCnt ++;
-				//need condition for no button press
-				// $("h1").after(gifObj.spaceTaco);
-				//replace this code with the correct answer and gif
-				//img responsive would be best, but we'r using HTML tags, so check GIPHY for helpful tags
-				// $("#image-holder").html("<img src='images/loading.gif' width='200px'/>");
 
-				//captures all non-clicks because the if statment is too broad
 			} else if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) !== -1) {
 				
 				$(".question").before(resultDiv);
@@ -707,11 +663,12 @@ function nextQuestion() {
 				randomGif = Math.floor(Math.random()*(4));
 				$(".correctAnswer").after($("<img>").attr("src",gifObj.badAnswer[randomGif]));
 				$("img").addClass("img-responsive center-block");
+				$(".correctAnswer, .answer").css('color', '#ff0000');
 				incorrectAnsCnt ++;
 			}
 
 			$("button.answerBtn").parent().parent().remove();
-		// };
+		
   	questionCount++;
   	showQuestion = setTimeout(displayQuestion, 1000 * 10);
 
@@ -725,7 +682,7 @@ function gameResults () {
 	clearTimeout(showQuestion);
 	clearTimeout(showAnswer);
 	stop();
-	//empty page ans show results
+	//empty page and show results
 		$(".answer").remove(); 
 		$(".timer").remove();
 		$("button.answerBtn").parent().parent().remove();
@@ -771,70 +728,6 @@ $(document).ready(function() {
 	start();
 
 }); 
-
-
-  
-  // // TODO: If the count is the same as the length of the question array, reset the count to 0.
-  // if (questionCount === 20) {
-  //   resetgame
-  // questionCount = 0;
-  //  };
-
-
-// function stopQuestion() {
-
-//   // TODO: Put our clearInterval here:
-//   clearInterval(showAnswer);
-//   // questionsRunning = false;
-
-// };
-
-
-
-//on game end and reset
-	//replace dom with score 
-		//maybe a unique gif
-	//display play again button (restart function)
-
-
-
-//------------------------ADDITIONAL NOTES---------------------------
-
-//rename objtype (use to generate random questions. 20 per game)
-
-//you can refer to the object values in the following format
-	// objtype.results[0].category = "Science and Nature"
-
-	//you can use $(var name for question element).html(objtype.results[0].category)
-		//this would .inner HTML whatever is there, and i believe replace the data
-
-//variables needed
-	//object of questions
-	//function in object to select 20 object questions
-	//gifObj to display per category (randomly)
-
-	//you can run the random selector function per game, and just store it in the start function
-
-	//div variables to display questions
-		//all multichoice questions have 1 div for questions, and 4 for answers
-		//all true false have one div for question, and 2 for answers
-		//add a button per answer appended to the h3 
-
-	//timer for each round (question count down)
-		//when timer reaches zero, do this function
-			//lap timer gives an example of how to do this 
-
-	//timer for correct answer
-		//when timer reaches zero, do this function
-			//slideshow gives an example of how to do this
-
-	//variable correct answers
-		//counts clicks matching correct answers
-
-	//variable incorrect answers (one per page)
-		//counts clicks matching incorrect answers array
-
-	//unanswered questions counter
 
 
 
