@@ -22,3 +22,7 @@ h2 {
 .results {
 	color: #000000;
 }
+
+.answer, .correctAnswer {
+	font-weight: bold;
+}

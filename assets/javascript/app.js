@@ -31,6 +31,7 @@ var questionCount = 0;
 var number = 20;
 //clear timer for the question rounds
 var questionsRunning = false;
+var cloneStart;
 
 var gameObj = {
 shuffleQuestions : function (array) {
@@ -481,7 +482,7 @@ var gifObj = {goodAnswer : ['https://media.giphy.com/media/FJkjFPkjn81vG/giphy.g
 							'https://media.giphy.com/media/3o6Mb43PiNTQS5WgLu/giphy.gif', 
 							'https://media.giphy.com/media/3oKIP8quIMUnLdfTAQ/giphy.gif', 
 							'https://media.giphy.com/media/iCyNFaz5QoIb6/giphy.gif']}
-
+var randomGif;
 // shows gif image
 // $("h1").after(gifObj.spaceTaco);
 
@@ -492,7 +493,7 @@ function start() {
 		// shuffle function
 		//store to window, or object? 
 	// game objects loaded on this screen (start function that will reset, also triggered when you choose 'play again' ), and "play game" button click starts the question function 
-
+	cloneStart = $(".gameDiv").clone();
 	gameObj.shuffleQuestions(gameObj.questionObj);
 	console.log(gameObj.questionObj)
 	//pick20
@@ -541,7 +542,7 @@ function gameRun () {
 };
 
 function decrement () {
-	// debugger;
+	// 
 
 	number--;
 
@@ -569,7 +570,7 @@ function stop () {
 //displays question for each round
 function displayQuestion () {
 	// console.log(gameArr);
-	// debugger;
+	// 
 	//stop the timeout for the answer page. 
 	clearTimeout(nextQuestion);
 	//remove correct answer div
@@ -642,11 +643,11 @@ function displayQuestion () {
 	gameRun();
 	//on click, show the answer page
 	//what's the status of questionsRunning when buttonClick is called?
-	// debugger;
+	// 
 
 	//setTimeout function for question page (this function determines when nextQuestion function runs)
 	showAnswer = setTimeout(nextQuestion, 1000 * 20);
-	debugger;
+	
 	buttonClick();
 };
 
@@ -674,20 +675,23 @@ function nextQuestion() {
 			correctAnswer = gameArr[questionCount].correct_answer;
 			$(".question").append("<h3 class='correctAnswer'>" + correctAnswer + "</h3>");
 
-			//if (correctAnswer) matches the text of the button you clicked, show correct answer
-			debugger	
+			//if (correctAnswer) matches the text of the button you clicked, show correct answer	
 			//i need the correct boolean/test for button clicks 
 			var resultDiv = $("<h3 class='answer'></h3>")
 			//needs to be in position 1. needs to say, if no click (if "this' is the window)
 			if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) === -1 && $(this).text() !== correctAnswer) {
-				debugger;
 				$(".question").before(resultDiv);
 				$(".answer").text("You didn't answer!");
+				$(".correctAnswer").after($("<img>").attr("src",'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif'));
+				$("img").addClass("img-responsive center-block");
 				unAnsCnt++;
 			} else if ($(this).text() === correctAnswer) {
-				debugger;
+				
 				$(".question").before(resultDiv);
 				$(".answer").text("Correct!");
+				randomGif = Math.floor(Math.random()*(4));
+				$(".correctAnswer").after($("<img>").attr("src",gifObj.goodAnswer[randomGif]));
+				$("img").addClass("img-responsive center-block");
 				correctAnsCnt ++;
 				//need condition for no button press
 				// $("h1").after(gifObj.spaceTaco);
@@ -697,9 +701,12 @@ function nextQuestion() {
 
 				//captures all non-clicks because the if statment is too broad
 			} else if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) !== -1) {
-				debugger;
+				
 				$(".question").before(resultDiv);
 				$(".answer").text("Incorrect!");
+				randomGif = Math.floor(Math.random()*(4));
+				$(".correctAnswer").after($("<img>").attr("src",gifObj.badAnswer[randomGif]));
+				$("img").addClass("img-responsive center-block");
 				incorrectAnsCnt ++;
 			}
 
@@ -716,6 +723,7 @@ function nextQuestion() {
 function gameResults () {
 	//stop interval true
 	clearTimeout(showQuestion);
+	clearTimeout(showAnswer);
 	stop();
 	//empty page ans show results
 		$(".answer").remove(); 
@@ -728,20 +736,40 @@ function gameResults () {
 	 					"<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>" +  
 	 					"</div>" + 
 	 					"</div>";
-	 	debugger;
+	 	
 		$(".results").after("<h3>Correct Answers: " + correctAnsCnt + "</h3>").addClass("results")
 		$(".results").after("<h3>Total Incorrect Answers: " + incorrectAnsCnt + "</h3>").addClass("results");
 		$(".results").after("<h3>Total Unanswered: " + unAnsCnt + "</h3").addClass("results");
 		$(".results").after(resultsDiv);
 		$(".resetBtn").append("<button class='btn btn-success btn-lg resetButton'>" + "Play Again" + "</button>");
+		$("h3:last").after($("<img>").attr("src",'https://media.giphy.com/media/plcoWBSrPvOP6/giphy.gif'));
 
 	//start reset/restart function
 	clearTimeout(gameResults);
-}
+	restart ();
+};
+
+function restart () {
+	$(".resetBtn").on("click",".resetButton", function (event) {
+		correctAnsCnt = 0;
+		incorrectAnsCnt = 0;
+		unAnsCnt = 0;
+		questionCount = 0;
+		number = 20;
+		questionsRunning = false;
+		gameArr = [];
+
+		$(".gameDiv").empty();
+		$(".gameDiv").replaceWith(cloneStart);
+		start();
+	});
+};
+
 
 $(document).ready(function() {
 	document.querySelector("body").style.backgroundImage="url(assets/images/dna2.jpg)";
 	start();
+
 }); 
 
 
