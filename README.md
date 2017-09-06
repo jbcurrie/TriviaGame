@@ -2,4 +2,4 @@
 
 ## [Trivia Game](https://jbcurrie.github.io/TriviaGame/index.html)
 
-A game of science trivia.
+A javascript/jQuery based science trivia game.
