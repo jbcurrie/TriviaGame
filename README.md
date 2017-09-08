@@ -1,5 +1,5 @@
-# TriviaGame
+# Science Rules Trivia Game
 
-## [Trivia Game](https://jbcurrie.github.io/TriviaGame/index.html)
+## [Play Game](https://jbcurrie.github.io/TriviaGame/index.html)
 
 A javascript/jQuery based science trivia game.
