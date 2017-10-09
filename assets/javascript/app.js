@@ -1,8 +1,3 @@
-// {
-// "response_code": 0,
-// "response_message": "Token Generated Successfully!",
-// "token": "b982599637014018956a38115fbc55a02b4d01d1e8ffe309881b5a2f1b15ad60"
-// }
 
 
 var gameArr = [];
@@ -10,7 +5,7 @@ var correctAnsCnt = 0;
 var correctAnswer = "";
 var incorrectAnsCnt = 0;
 var unAnsCnt = 0;
-var answer = "";
+// var answer = "";
 var showAnswer;
 var showQuestion;
 var showResults;
@@ -33,7 +28,8 @@ shuffleQuestions : function (array) {
 		array[i] = array [j];
 		array[j] = temp;
 	}
-	return array; },
+	return array; 
+},
 "questionObj": [
 				{ "category": "Science & Nature",
 				"type": "boolean",
@@ -462,29 +458,31 @@ shuffleQuestions : function (array) {
 				]};
 
 
-var gifObj = {goodAnswer : ['https://media.giphy.com/media/FJkjFPkjn81vG/giphy.gif', 
-							'https://media.giphy.com/media/qrlOmXoTgHAd2/giphy.gif', 
-							'https://media.giphy.com/media/w5FTwwiweGqDm/giphy.gif', 
-							'https://media.giphy.com/media/BLTS8Dz5exZiU/giphy.gif'], 
-			badAnswer : ['https://media.giphy.com/media/z1GQ9t8FxipnG/giphy.gif', 
-							'https://media.giphy.com/media/3o6Mb43PiNTQS5WgLu/giphy.gif', 
-							'https://media.giphy.com/media/3oKIP8quIMUnLdfTAQ/giphy.gif', 
-							'https://media.giphy.com/media/iCyNFaz5QoIb6/giphy.gif']}
+var gifObj = {
+	goodAnswer : [
+		'https://media.giphy.com/media/FJkjFPkjn81vG/giphy.gif', 
+		'https://media.giphy.com/media/qrlOmXoTgHAd2/giphy.gif', 
+		'https://media.giphy.com/media/w5FTwwiweGqDm/giphy.gif', 
+		'https://media.giphy.com/media/BLTS8Dz5exZiU/giphy.gif'
+			], 
+	badAnswer : [
+		'https://media.giphy.com/media/z1GQ9t8FxipnG/giphy.gif', 
+		'https://media.giphy.com/media/3o6Mb43PiNTQS5WgLu/giphy.gif', 
+		'https://media.giphy.com/media/3oKIP8quIMUnLdfTAQ/giphy.gif', 
+		'https://media.giphy.com/media/iCyNFaz5QoIb6/giphy.gif'
+				]
+}
 var randomGif;
-// shows gif image
 
 
 function start() {
-	// on game start, shuffle object, grab the first 20 to a game array
-		// shuffle function
-	// game objects loaded on this screen (start function that will reset, also triggered when you choose 'play again' ), and "play game" button click starts the question function 
 	cloneStart = $(".gameDiv").clone();
 	gameObj.shuffleQuestions(gameObj.questionObj);
 	pickTwenty(gameArr);
-	questionRounds ();
+	questionRounds();
 };
 
-//twenty questions per game (on window load/ start function invoked)
+
 function pickTwenty (arr) {
 	for (var i = 0; i < 21; i++) {
 		arr.push(gameObj.questionObj[i])
@@ -492,15 +490,12 @@ function pickTwenty (arr) {
 	return arr; 
 };
 
-//starts the game intervals (20 seconds) once start is clicked. after 20 seconds, or a button click, nextQuestion interval begins
-//next question shows after nextQuestion interval ends 
+
 function questionRounds () {
 	$(".gameDiv").on("click",".startGame", function (event) {
 		$(".startGame").remove();
-
 		displayQuestion();
 	});
-
 };
 
 function gameRun () {
@@ -514,16 +509,11 @@ function gameRun () {
 };
 
 function decrement () {
-
 	number--;
-
     //  Show the number in the #timer tag.
     $(".timer").html($("<h3>Time Left : " + number + "s</h3>"));
-
-
 	//  Once number hits zero...
     if (number === 0) {
-
         //  ...run the stop function.
         stop();
 	}
@@ -538,7 +528,6 @@ function stop () {
 
 //displays question for each round
 function displayQuestion () {
-
 	//stop the timeout for the answer page. 
 	clearTimeout(nextQuestion);
 	//remove correct answer div
@@ -550,14 +539,10 @@ function displayQuestion () {
 	 					"</button>" + 
 						"</div>" + 
 	 					"</div>";
-
-	 
-	 
 	//question to display
 	if (gameArr[questionCount].type === 'boolean') {
 		var tempArr = [];
 		$(".question").html(gameArr[questionCount].question);
-
 		tempArr.push(gameArr[questionCount].correct_answer);
 		for (var i = 0; i < gameArr[questionCount].incorrect_answers.length; i++) {
 			tempArr.push(gameArr[questionCount].incorrect_answers[i]);
@@ -570,54 +555,37 @@ function displayQuestion () {
 				}
 				$(".question").after($(answerDiv))
 				$(".answerBtn:first").text(tempArr[j]);
-
 			};
 	} else if (gameArr[questionCount].type === 'multiple') {
-	
 		var tempArrE = [];
-		// push 
 		tempArrE.push(gameArr[questionCount].correct_answer);
 		for (var i = 0; i < gameArr[questionCount].incorrect_answers.length; i++) {
 			tempArrE.push(gameArr[questionCount].incorrect_answers[i]);
 		};
 		//multi choice responses will be shuffled for each round
-			var j = tempArrE.length;
-			var k = 0;
-			var temp = [];
-
-			while (j--) {
-
-				k = Math.floor(Math.random() * (j+1));
-				temp = tempArrE[j];
-				tempArrE[j] = tempArrE[k];
-				tempArrE[k] = temp;
-
-			}
-			$(".question").html(gameArr[questionCount].question);
-
-		for (var i = 0; i < tempArrE.length; i++) {
-
-			$(".question").after($(answerDiv));
-			$(".answerBtn:first").text(tempArrE[i]);
-
-			
+		var j = tempArrE.length;
+		var k = 0;
+		var temp = [];
+		while (j--) {
+			k = Math.floor(Math.random() * (j+1));
+			temp = tempArrE[j];
+			tempArrE[j] = tempArrE[k];
+			tempArrE[k] = temp;
 		}
-
-
+		$(".question").html(gameArr[questionCount].question);
+		for (var i = 0; i < tempArrE.length; i++) {
+			$(".question").after($(answerDiv));
+			$(".answerBtn:first").text(tempArrE[i]);	
+		}
 	};
 	//setTimeout time for question timer
 	number = 20;
 	//timer function for each question
 	gameRun();
-	//on click, show the answer page
-	//what's the status of questionsRunning when buttonClick is called?
-
 	//setTimeout function for question page (this function determines when nextQuestion function runs)
 	showAnswer = setTimeout(nextQuestion, 1000 * 20);
-	
 	buttonClick();
 };
-
 
 //mouse click function to interrupt timer when player selects their answer
 function buttonClick () {
@@ -630,48 +598,41 @@ function nextQuestion() {
 	clearTimeout(showAnswer);
 	//stop the clock;
 	stop();
-			//remove the timer
-			$(".timer").remove();
-			//display the correct answer to the DOM
-			correctAnswer = gameArr[questionCount].correct_answer;
-			$(".question").append("<h3 class='correctAnswer'>" + correctAnswer + "</h3>");
-			//if (correctAnswer) matches the text of the button you clicked, show correct answer	
-
-			var resultDiv = $("<h3 class='answer'></h3>")
+	$(".timer").remove();
+	correctAnswer = gameArr[questionCount].correct_answer;
+	$(".question").append("<h3 class='correctAnswer'>" + correctAnswer + "</h3>");
+	//if (correctAnswer) matches the text of the button you clicked, show correct answer	
+	var resultDiv = $("<h3 class='answer'></h3>")
+	if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) === -1 && $(this).text() !== correctAnswer) {
+		$(".question").before(resultDiv);
+		$(".answer").text("You didn't answer!");
+		$(".correctAnswer").after($("<img>").attr("src",'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif'));
+		$("img").addClass("img-responsive center-block");
+		$(".correctAnswer, .answer").css('color', '#ff0000');
+		unAnsCnt++;
+	} else if ($(this).text() === correctAnswer) {
 		
-			if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) === -1 && $(this).text() !== correctAnswer) {
-				$(".question").before(resultDiv);
-				$(".answer").text("You didn't answer!");
-				$(".correctAnswer").after($("<img>").attr("src",'https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif'));
-				$("img").addClass("img-responsive center-block");
-				$(".correctAnswer, .answer").css('color', '#ff0000');
-				unAnsCnt++;
-			} else if ($(this).text() === correctAnswer) {
-				
-				$(".question").before(resultDiv);
-				$(".answer").text("Correct!");
-				randomGif = Math.floor(Math.random()*(4));
-				$(".correctAnswer").after($("<img>").attr("src",gifObj.goodAnswer[randomGif]));
-				$("img").addClass("img-responsive center-block");
-				$(".correctAnswer, .answer").css('color', '#228B22');
-				correctAnsCnt ++;
-
-			} else if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) !== -1) {
-				
-				$(".question").before(resultDiv);
-				$(".answer").text("Incorrect!");
-				randomGif = Math.floor(Math.random()*(4));
-				$(".correctAnswer").after($("<img>").attr("src",gifObj.badAnswer[randomGif]));
-				$("img").addClass("img-responsive center-block");
-				$(".correctAnswer, .answer").css('color', '#ff0000');
-				incorrectAnsCnt ++;
-			}
-
-			$("button.answerBtn").parent().parent().remove();
-		
+		$(".question").before(resultDiv);
+		$(".answer").text("Correct!");
+		randomGif = Math.floor(Math.random()*(4));
+		$(".correctAnswer").after($("<img>").attr("src",gifObj.goodAnswer[randomGif]));
+		$("img").addClass("img-responsive center-block");
+		$(".correctAnswer, .answer").css('color', '#228B22');
+		correctAnsCnt ++;
+	} else if (gameArr[questionCount].incorrect_answers.indexOf($(this).text()) !== -1) {	
+		$(".question").before(resultDiv);
+		$(".answer").text("Incorrect!");
+		randomGif = Math.floor(Math.random()*(4));
+		$(".correctAnswer").after($("<img>").attr("src",gifObj.badAnswer[randomGif]));
+		$("img").addClass("img-responsive center-block");
+		$(".correctAnswer, .answer").css('color', '#ff0000');
+		incorrectAnsCnt ++;
+	}
+	
+	$("button.answerBtn").parent().parent().remove();	
   	questionCount++;
-  	showQuestion = setTimeout(displayQuestion, 1000 * 10);
-
+	showQuestion = setTimeout(displayQuestion, 1000 * 10);
+	  
   	if (questionCount > 19) {
   		showResults = setTimeout(gameResults, 1000 * 10);
   	}
@@ -683,27 +644,27 @@ function gameResults () {
 	clearTimeout(showAnswer);
 	stop();
 	//empty page and show results
-		$(".answer").remove(); 
-		$(".timer").remove();
-		$("button.answerBtn").parent().parent().remove();
-		$(".question").empty().replaceWith("<h2 class='results'>Game Over!</h2>")
-		$(".correctAnswer").remove();
-		
-		var resultsDiv = "<div class='row resetBtn'>" + 
-	 					"<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>" +  
-	 					"</div>" + 
-	 					"</div>";
-	 	
-		$(".results").after("<h3>Correct Answers: " + correctAnsCnt + "</h3>").addClass("results")
-		$(".results").after("<h3>Total Incorrect Answers: " + incorrectAnsCnt + "</h3>").addClass("results");
-		$(".results").after("<h3>Total Unanswered: " + unAnsCnt + "</h3").addClass("results");
-		$(".results").after(resultsDiv);
-		$(".resetBtn").append("<button class='btn btn-success btn-lg resetButton'>" + "Play Again" + "</button>");
-		$("h3:last").after($("<img>").attr("src",'https://media.giphy.com/media/plcoWBSrPvOP6/giphy.gif'));
+	$(".answer").remove(); 
+	$(".timer").remove();
+	$("button.answerBtn").parent().parent().remove();
+	$(".question").empty().replaceWith("<h2 class='results'>Game Over!</h2>")
+	$(".correctAnswer").remove();
+	
+	var resultsDiv = "<div class='row resetBtn'>" + 
+					"<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>" +  
+					"</div>" + 
+					"</div>";
+	
+	$(".results").after("<h3>Correct Answers: " + correctAnsCnt + "</h3>").addClass("results")
+	$(".results").after("<h3>Total Incorrect Answers: " + incorrectAnsCnt + "</h3>").addClass("results");
+	$(".results").after("<h3>Total Unanswered: " + unAnsCnt + "</h3").addClass("results");
+	$(".results").after(resultsDiv);
+	$(".resetBtn").append("<button class='btn btn-success btn-lg resetButton'>" + "Play Again" + "</button>");
+	$("h3:last").after($("<img>").attr("src",'https://media.giphy.com/media/plcoWBSrPvOP6/giphy.gif'));
 
 	//start reset/restart function
 	clearTimeout(gameResults);
-	restart ();
+	restart();
 };
 
 function restart () {
@@ -726,7 +687,6 @@ function restart () {
 $(document).ready(function() {
 	document.querySelector("body").style.backgroundImage="url(assets/images/dna2.jpg)";
 	start();
-
 }); 
 
 
